@@ -78,6 +78,7 @@ html,body{height:100%;font-family:var(--font);font-size:15px;background:var(--bg
 .sb-toggle-btn:hover{background:var(--bg-hover);color:var(--t1)}
 .sb-toggle-btn svg{width:14px;height:14px}
 .sb-inner{flex:1;overflow-y:auto;overflow-x:hidden;padding:10px 8px}
+.sb-bottom{padding:8px 8px 6px;border-top:1px solid var(--border);flex-shrink:0}
 .sb-section-label{font-size:9.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:6px 8px 4px;white-space:nowrap;overflow:hidden;transition:opacity .15s}
 .sidebar.collapsed .sb-section-label{opacity:0}
 .nav-item{display:flex;align-items:center;gap:10px;padding:8px 8px;border-radius:8px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--font);font-size:13.5px;font-weight:500;color:var(--t2);transition:all .15s;white-space:nowrap;overflow:hidden;position:relative}
@@ -164,6 +165,8 @@ body.dark .ti-teal{background:rgba(29,158,117,0.12);color:#3ECFA3}
 .sb-topic-main{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
 .sb-topic-meta-wrap{min-width:0}
 .sidebar.collapsed .sb-topic-head .nav-label,.sidebar.collapsed .topic-chevron{display:none}
+.sidebar.collapsed .sb-topic-head{justify-content:center;padding-left:0;padding-right:0}
+.sidebar.collapsed .sb-topic-list{display:none !important}
 .sb-topic-label{font-size:12.5px;font-weight:500;color:var(--t1);white-space:nowrap}
 .sb-topic-meta{display:none}
 .sb-topic .topic-icon{width:24px;height:24px;border-radius:6px}
@@ -178,23 +181,31 @@ body.dark .ti-teal{background:rgba(29,158,117,0.12);color:#3ECFA3}
 
 /* MAIN CONTENT */
 .main-content{
-  width:100%;
+  width:auto;
   display:flex;
   justify-content:center;
   min-height:calc(100vh - var(--topbar));
-  padding:24px 20px 80px calc(var(--sb-w) + 24px);
+  margin-left:var(--sb-w);
+  padding:24px 20px 80px;
 }
 .content{width:100%;max-width:1280px;margin:0}
 
+body.auth-locked .topbar{display:none}
+body.auth-locked .sidebar{display:none}
+body.auth-locked .app-body{margin-top:0;min-height:100vh}
+body.auth-locked .main-content{margin-left:0;padding:0;min-height:100vh}
+body.auth-locked .content{max-width:none}
+body.auth-locked .auth-wrap{min-height:100vh;padding:24px}
+
 body.sb-collapsed .main-content{
-  padding-left:calc(var(--sb-w) + 24px);
+  margin-left:var(--sb-collapsed);
 }
 
 @media (max-width: 980px){
   .main-content,
   body.sb-collapsed .main-content{
-    padding-left:calc(var(--sb-collapsed) + 14px);
-    padding-right:14px;
+    margin-left:var(--sb-collapsed);
+    padding:20px 14px 70px;
   }
   .content{max-width:100%}
 }
@@ -256,8 +267,10 @@ body.dark .chip-amber{border-color:rgba(240,184,96,0.25)}
 body.dark .chip-red{border-color:rgba(232,116,116,0.25)}
 .ptime{font-size:11.5px;color:var(--t3)}
 .post-txt{font-size:14.5px;color:var(--t1);line-height:1.75;margin-bottom:12px}
-.post-img{border-radius:9px;overflow:hidden;margin-bottom:12px;max-height:250px;border:1px solid var(--border)}
-.post-img img{width:100%;height:100%;object-fit:cover;display:block}
+.post-img{border-radius:9px;overflow:hidden;margin-bottom:12px;border:1px solid var(--border);cursor:pointer;background:var(--bg-input)}
+.post-img img{width:100%;height:auto;max-height:500px;object-fit:contain;display:block;transition:transform 0.2s}
+.post-img.landscape img{object-fit:cover;max-height:350px}
+.post-img:hover img{transform:scale(1.01)}
 .post-acts{display:flex;align-items:center;gap:2px;border-top:1px solid var(--border);padding-top:9px}
 .act-btn{display:flex;align-items:center;gap:4px;padding:4px 9px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--t2);cursor:pointer;border:none;background:transparent;font-family:var(--font);transition:all .12s}
 .act-btn svg{width:13px;height:13px}
@@ -268,9 +281,6 @@ body.dark .chip-red{border-color:rgba(232,116,116,0.25)}
 .report-btn{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;color:var(--t3);transition:all .15s}
 .report-btn:hover{color:var(--err);background:var(--err-bg)}
 .report-btn svg{width:12px;height:12px}
-.more-btn{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;cursor:pointer;color:var(--t3);transition:all .15s}
-.more-btn:hover{background:var(--bg-hover);color:var(--t1)}
-.more-btn svg{width:13px;height:13px}
 
 /* PAGE HEADER */
 .page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
@@ -400,15 +410,16 @@ body.dark .rb-mod{border-color:rgba(92,201,138,0.25)}
 .rb-client{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-border)}
 
 /* ADMIN LAYOUT */
-.admin-wrap{display:grid;grid-template-columns:180px 1fr;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-surface);min-height:520px}
-.page#p-admin .admin-wrap{width:100%}
-.admin-nav{border-right:1px solid var(--border);padding:10px 0}
-.admin-nav-item{display:flex;align-items:center;gap:7px;padding:8px 12px;font-size:13px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;border-left:2px solid transparent;border-top:none;border-right:none;border-bottom:none;background:none;width:100%;font-family:var(--font)}
-.admin-nav-item:hover{background:var(--bg-hover);color:var(--t1)}
-.admin-nav-item.active{color:var(--accent);background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
-.admin-nav-item svg{width:14px;height:14px;flex-shrink:0}
-.admin-panel{display:none;padding:18px}
+.admin-wrap{width:100%}
+.admin-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:14px}
+.admin-nav-item{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-size:13.5px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;border:none;border-bottom:2px solid transparent;background:none;font-family:var(--font);margin-bottom:-1px}
+.admin-nav-item:hover{color:var(--t1)}
+.admin-nav-item.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.admin-nav-item svg{width:13px;height:13px;flex-shrink:0}
+.admin-panel{display:none;padding:0;animation:pgIn .25s ease}
 .admin-panel.on{display:block}
+.admin-panel .full-width-table{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg-surface)}
+.admin-panel #admin-topic-form{background:var(--bg-surface);border-radius:12px}
 
 /* MODERATION */
 .mod-layout{display:grid;grid-template-columns:280px 1fr;gap:12px;min-height:440px}
@@ -570,8 +581,7 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
       <div class="av-sm" id="topbar-avatar" onclick="toggleProfileMenu(event)">E</div>
       <div class="profile-menu" id="profile-menu">
         <button onclick="handleProfileAction('profil')">Mon Profil</button>
-        <button onclick="handleProfileAction('params')">Paramètres</button>
-        <button onclick="handleProfileAction('connexion')">Logout</button>
+        <button onclick="handleProfileAction('logout')">Logout</button>
       </div>
     </div>
   </div>
@@ -637,7 +647,8 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
         </div>
       </div>
     </div>
-    <div class="sb-divider"></div>
+  </div>
+  <div class="sb-bottom">
     <div class="sb-section-label">Gestion</div>
     <button class="nav-item" data-p="moderation" data-tip="Modération" onclick="go('moderation')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="nav-label">Modération</span>
@@ -653,7 +664,7 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
         <div class="sb-uname">EtoileLibre42</div>
         <div class="sb-urole">Administrateur</div>
       </div>
-      <button class="sb-logout" onclick="event.stopPropagation();go('connexion')" title="Déconnexion">
+      <button class="sb-logout" onclick="event.stopPropagation();logout()" title="Déconnexion">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       </button>
     </div>
@@ -708,12 +719,13 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
         <p class="auth-sub" style="margin:0">Votre identité réelle reste strictement privée.</p>
       </div>
       <h2 class="auth-title">Créer un compte</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="form-row" style="margin-top:0"><label class="form-label">Prénom</label><input class="form-inp" placeholder="Jean"></div><div class="form-row" style="margin-top:0"><label class="form-label">Nom</label><input class="form-inp" placeholder="Dupont"></div></div>
-      <div class="form-row"><label class="form-label">Email</label><input class="form-inp" type="email" placeholder="ex@domaine.com"></div>
-      <div class="form-row"><label class="form-label">Téléphone <span style="color:var(--t3)">(optionnel)</span></label><input class="form-inp" type="tel" placeholder="+216 XX XXX XXX"></div>
-      <div class="form-row"><label class="form-label">Mot de passe</label><div class="pass-wrap"><input class="form-inp" type="password" placeholder="Min. 8 caractères"><button class="pass-eye"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-      <div class="form-row"><label class="form-label">Pseudonyme anonyme</label><input class="form-inp" placeholder="ex: EtoileLibre42"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:1px solid var(--border);margin-top:4px"><div><div style="font-size:13.5px;color:var(--t1)">Candidater comme modérateur</div><div style="font-size:11.5px;color:var(--t2);margin-top:1px">Votre demande sera examinée</div></div><button class="tog" onclick="this.classList.toggle('on')"></button></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="form-row" style="margin-top:0"><label class="form-label">Prénom</label><input class="form-inp" id="rf" placeholder="Jean"></div><div class="form-row" style="margin-top:0"><label class="form-label">Nom</label><input class="form-inp" id="rl" placeholder="Dupont"></div></div>
+      <div class="form-row"><label class="form-label">Email</label><input class="form-inp" id="re" type="email" placeholder="ex@domaine.com"></div>
+      <div class="form-row"><label class="form-label">Téléphone <span style="color:var(--t3)">(optionnel)</span></label><input class="form-inp" id="rt" type="tel" placeholder="+216 XX XXX XXX"></div>
+      <div class="form-row"><label class="form-label">Mot de passe</label><div class="pass-wrap"><input class="form-inp" id="rp" type="password" placeholder="Min. 8 caractères"><button class="pass-eye" onclick="tp('rp')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="form-row"><label class="form-label">Pseudonyme anonyme</label><input class="form-inp" id="ru" placeholder="ex: EtoileLibre42"></div>
+      <div class="form-row"><label class="form-label">Avatar</label><select class="select-inp" id="ra"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E" selected>E</option><option value="M">M</option><option value="S">S</option><option value="T">T</option></select></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-top:1px solid var(--border);margin-top:4px"><div><div style="font-size:13.5px;color:var(--t1)">Candidater comme modérateur</div><div style="font-size:11.5px;color:var(--t2);margin-top:1px">Votre demande sera examinée</div></div><button class="tog" id="rmod" onclick="this.classList.toggle('on')"></button></div>
       <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px" onclick="doReg()">Créer mon compte</button>
       <div class="auth-link" style="margin-top:9px">Déjà un compte ? <a onclick="go('connexion')">Se connecter</a></div>
     </div>
@@ -780,21 +792,27 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
     <span id="home-filter-label">Filtré par topic</span>
     <button class="btn btn-outline btn-sm" onclick="clearHomeTopicFilter()">Tout afficher</button>
   </div>
-  <div class="post-card home-post" data-topic="Technologie" onclick="go('detail')">
-    <div class="post-head"><div class="post-user"><div class="av av1">C</div><div><div class="pun">CyberNinja99</div><div class="pmeta"><span class="chip chip-blue">Technologie</span><span class="ptime">il y a 2h</span></div></div></div><button class="more-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></div>
+  <div class="post-card home-post" data-topic="Technologie" id="home-post-1">
+    <div class="post-head"><div class="post-user"><div class="av av1">C</div><div><div class="pun">CyberNinja99</div><div class="pmeta"><span class="chip chip-blue">Technologie</span><span class="ptime">il y a 2h</span></div></div></div></div>
     <div class="post-txt">Je pense que nous sous-estimons l'impact de l'IA générative sur les métiers créatifs. Ce n'est pas juste un outil, c'est un changement de paradigme complet. Comment vous préparez-vous à cette transition ?</div>
-    <div class="post-acts"><button class="act-btn liked" id="al1" onclick="lk('al1',124,event)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc1">124</span></button><button class="act-btn" id="ad1" onclick="dk('ad1',12,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc1">12</span></button><button class="act-btn" onclick="event.stopPropagation();go('detail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>45</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="post-acts"><button class="act-btn liked" id="al1" onclick="lk('al1',124,event)"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc1">124</span></button><button class="act-btn" id="ad1" onclick="dk('ad1',12,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc1">12</span></button><button class="act-btn" onclick="togglePostComments('1',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>45</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="comment-list" id="home-comments-1" style="display:none;margin-top:10px"><div class="citem"><div class="av av2" style="width:28px;height:28px;font-size:10px;flex-shrink:0">M</div><div><div class="cun">MindfulCoder <span class="ptime" style="font-weight:400;margin-left:5px">il y a 1h</span></div><div class="ctx">Très bon point, l'impact est déjà visible dans le design produit.</div></div></div><div class="citem"><div class="av av3" style="width:28px;height:28px;font-size:10px;flex-shrink:0">A</div><div><div class="cun">AnonymeRed42 <span class="ptime" style="font-weight:400;margin-left:5px">il y a 35 min</span></div><div class="ctx">Je pense qu'on doit surtout apprendre à collaborer avec l'IA.</div></div></div></div>
+    <div class="comment-box" id="home-comment-box-1" style="display:none;margin-top:10px"><div class="av av1" style="width:28px;height:28px;font-size:10px;flex-shrink:0">E</div><input class="comment-input" placeholder="Écrire un commentaire…" onkeydown="if(event.key==='Enter'){event.preventDefault();addInlineComment('1',this)}"><button class="send-btn" onclick="addInlineComment('1', this.previousElementSibling)">Envoyer</button></div>
   </div>
-  <div class="post-card home-post" data-topic="Technologie" onclick="go('detail')">
-    <div class="post-head"><div class="post-user"><div class="av av2">D</div><div><div class="pun">DevAnonyme</div><div class="pmeta"><span class="chip chip-blue">Technologie</span><span class="ptime">il y a 5h</span></div></div></div><button class="more-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></div>
+  <div class="post-card home-post" data-topic="Technologie" id="home-post-2">
+    <div class="post-head"><div class="post-user"><div class="av av2">D</div><div><div class="pun">DevAnonyme</div><div class="pmeta"><span class="chip chip-blue">Technologie</span><span class="ptime">il y a 5h</span></div></div></div></div>
     <div class="post-txt">Mon setup pour le télétravail. J'ai investi dans un siège ergonomique et ça change vraiment la donne après de longues heures de travail.</div>
     <div class="post-img"><img src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=700&h=250&fit=crop" alt="Setup" onerror="this.parentElement.style.display='none'"></div>
-    <div class="post-acts"><button class="act-btn" id="al2" onclick="lk('al2',89,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc2">89</span></button><button class="act-btn" id="ad2" onclick="dk('ad2',2,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc2">2</span></button><button class="act-btn" onclick="event.stopPropagation();go('detail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>18</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="post-acts"><button class="act-btn" id="al2" onclick="lk('al2',89,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc2">89</span></button><button class="act-btn" id="ad2" onclick="dk('ad2',2,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc2">2</span></button><button class="act-btn" onclick="togglePostComments('2',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>18</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="comment-list" id="home-comments-2" style="display:none;margin-top:10px"><div class="citem"><div class="av av1" style="width:28px;height:28px;font-size:10px;flex-shrink:0">C</div><div><div class="cun">CyberNinja99 <span class="ptime" style="font-weight:400;margin-left:5px">il y a 25 min</span></div><div class="ctx">Merci pour le partage, ton setup a l'air top.</div></div></div></div>
+    <div class="comment-box" id="home-comment-box-2" style="display:none;margin-top:10px"><div class="av av1" style="width:28px;height:28px;font-size:10px;flex-shrink:0">E</div><input class="comment-input" placeholder="Écrire un commentaire…" onkeydown="if(event.key==='Enter'){event.preventDefault();addInlineComment('2',this)}"><button class="send-btn" onclick="addInlineComment('2', this.previousElementSibling)">Envoyer</button></div>
   </div>
-  <div class="post-card home-post" data-topic="Éducation" onclick="go('detail')">
-    <div class="post-head"><div class="post-user"><div class="av av3">S</div><div><div class="pun">StarAnon77</div><div class="pmeta"><span class="chip chip-amber">Éducation</span><span class="ptime">il y a 8h</span></div></div></div><button class="more-btn" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></div>
+  <div class="post-card home-post" data-topic="Éducation" id="home-post-3">
+    <div class="post-head"><div class="post-user"><div class="av av3">S</div><div><div class="pun">StarAnon77</div><div class="pmeta"><span class="chip chip-amber">Éducation</span><span class="ptime">il y a 8h</span></div></div></div></div>
     <div class="post-txt">Après 10 ans dans l'enseignement, je me demande si l'IA va permettre une éducation vraiment personnalisée. Les outils existent, mais les institutions peinent à s'adapter.</div>
-    <div class="post-acts"><button class="act-btn" id="al3" onclick="lk('al3',56,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc3">56</span></button><button class="act-btn" id="ad3" onclick="dk('ad3',3,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc3">3</span></button><button class="act-btn" onclick="event.stopPropagation();go('detail')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>22</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="post-acts"><button class="act-btn" id="al3" onclick="lk('al3',56,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/></svg><span id="lc3">56</span></button><button class="act-btn" id="ad3" onclick="dk('ad3',3,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3H10z"/></svg><span id="dc3">3</span></button><button class="act-btn" onclick="togglePostComments('3',event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>22</button><div class="act-spacer"></div><button class="report-btn" onclick="event.stopPropagation();openM('reportM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></button></div>
+    <div class="comment-list" id="home-comments-3" style="display:none;margin-top:10px"></div>
+    <div class="comment-box" id="home-comment-box-3" style="display:none;margin-top:10px"><div class="av av1" style="width:28px;height:28px;font-size:10px;flex-shrink:0">E</div><input class="comment-input" placeholder="Écrire un commentaire…" onkeydown="if(event.key==='Enter'){event.preventDefault();addInlineComment('3',this)}"><button class="send-btn" onclick="addInlineComment('3', this.previousElementSibling)">Envoyer</button></div>
   </div>
   <div id="home-empty" class="empty-state" style="display:none;padding:24px 0">
     <p>Aucun post disponible pour ce topic.</p>
@@ -947,9 +965,6 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
       <div>
         <div class="prof-av-wrap">
           <div class="prof-av" id="prof-av-display">E</div>
-          <div class="prof-av-edit" onclick="openM('editM')" title="Changer la photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </div>
         </div>
       </div>
       <div style="flex:1">
@@ -961,10 +976,6 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
           <div><div class="stat-n">89</div><div class="stat-l">Commentaires</div></div>
         </div>
       </div>
-    </div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap">
-      <button class="btn btn-outline btn-sm" onclick="openM('editM')">Modifier le profil</button>
-      <button class="btn btn-danger btn-sm" onclick="go('connexion')">Déconnexion</button>
     </div>
   </div>
   <div class="feed-tabs">
@@ -993,11 +1004,7 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
     </div>
     <div style="text-align:center;padding:14px;color:var(--t3);font-size:13px;margin-top:7px">Découvrir plus de topics → <a style="color:var(--accent);cursor:pointer" onclick="go('topics')">Explorer</a></div>
   </div>
-</div>
-
-<!-- PARAMS -->
-<div class="page" id="p-params">
-  <div class="page-head"><h1 class="page-title">Paramètres</h1></div>
+  <div class="page-head" style="margin-top:16px"><h1 class="page-title">Paramètres du profil</h1></div>
   <div class="acc-group open">
     <div class="acc-head" onclick="toggleAcc(this)"><span class="acc-title">Compte</span><svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="acc-body">
@@ -1036,16 +1043,14 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
   <div class="page-head"><h1 class="page-title">Modération</h1></div>
 
   <!-- Stats row -->
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px">
     <div class="stat-card"><div class="stat-card-label">En attente</div><div class="stat-card-value color-warn" id="mod-pending-count">3</div><div class="stat-card-sub color-warn">Posts à réviser</div></div>
-    <div class="stat-card"><div class="stat-card-label">Signalements</div><div class="stat-card-value color-err">2</div><div class="stat-card-sub color-err">À traiter</div></div>
-    <div class="stat-card"><div class="stat-card-label">Comptes restreints</div><div class="stat-card-value" id="mod-banned-count">3</div><div class="stat-card-sub" style="color:var(--t3)">Bans actifs</div></div>
+    <div class="stat-card"><div class="stat-card-label">Signalements</div><div class="stat-card-value color-err" id="mod-reports-count">2</div><div class="stat-card-sub color-err">À traiter</div></div>
   </div>
 
   <div class="feed-tabs">
     <button class="feed-tab on" onclick="switchModTab(this,'mod-pending')">File d'attente <span style="background:var(--warn-bg);color:var(--warn);font-size:9.5px;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:700" id="pendingBadge">3</span></button>
-    <button class="feed-tab" onclick="switchModTab(this,'mod-reports')">Signalements <span style="background:var(--err-bg);color:var(--err);font-size:9.5px;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:700">2</span></button>
-    <button class="feed-tab" onclick="switchModTab(this,'mod-banned')">Comptes restreints <span style="background:var(--bg-surface2);color:var(--t2);font-size:9.5px;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:700" id="bannedBadge">3</span></button>
+    <button class="feed-tab" onclick="switchModTab(this,'mod-reports')">Signalements <span style="background:var(--err-bg);color:var(--err);font-size:9.5px;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:700" id="reportsBadge">2</span></button>
   </div>
   <div class="mod-tab-content on" id="mod-pending">
     <div class="mod-layout">
@@ -1071,30 +1076,21 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><div class="av av1">C</div><div><div style="font-size:14px;font-weight:600;color:var(--t1)">CyberNinja99</div><div class="pmeta"><span class="chip chip-blue">Technologie</span><span class="ptime">il y a 15 min</span></div></div></div>
           <div style="font-size:14px;color:var(--t1);line-height:1.75;margin-bottom:0;padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid var(--accent-border)">Je pense que nous sous-estimons l'impact de l'IA générative sur les métiers créatifs. Ce n'est pas juste un outil, c'est un changement de paradigme complet. Comment vous préparez-vous à cette transition ?</div>
           <div class="mod-act-row">
-            <button class="btn btn-primary btn-sm" onclick="modAct2('validate','mq1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>Publier</button>
             <button class="btn btn-danger btn-sm" onclick="modAct2('delete','mq1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Supprimer</button>
-            <button class="btn btn-warn btn-sm" onclick="openSuspendModal('CyberNinja99')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Suspendre</button>
-            <button class="btn btn-danger btn-sm" onclick="openBanModal('CyberNinja99','mq1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Bannir</button>
           </div>
         </div>
         <div id="mprev2" class="mprevcontent" style="display:none">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><div class="av av3">S</div><div><div style="font-size:14px;font-weight:600;color:var(--t1)">StarAnon77</div><div class="pmeta"><span class="chip chip-amber">Éducation</span><span class="ptime">il y a 1h</span></div></div></div>
           <div style="font-size:14px;color:var(--t1);line-height:1.75;padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid var(--accent-border)">Après 10 ans dans l'enseignement, je me demande si l'IA va permettre une éducation vraiment personnalisée. Les outils existent, mais les institutions peinent à s'adapter.</div>
           <div class="mod-act-row">
-            <button class="btn btn-primary btn-sm" onclick="modAct2('validate','mq2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>Publier</button>
             <button class="btn btn-danger btn-sm" onclick="modAct2('delete','mq2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Supprimer</button>
-            <button class="btn btn-warn btn-sm" onclick="openSuspendModal('StarAnon77')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Suspendre</button>
-            <button class="btn btn-danger btn-sm" onclick="openBanModal('StarAnon77','mq2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Bannir</button>
           </div>
         </div>
         <div id="mprev3" class="mprevcontent" style="display:none">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><div class="av av2">M</div><div><div style="font-size:14px;font-weight:600;color:var(--t1)">MindfulCoder</div><div class="pmeta"><span class="chip chip-green">Santé</span><span class="ptime">il y a 2h</span></div></div></div>
           <div style="font-size:14px;color:var(--t1);line-height:1.75;padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid var(--accent-border)">Gestion du stress en période de deadline intense. J'ai essayé la méditation mais ça ne fonctionne pas pour moi. Des alternatives à proposer ?</div>
           <div class="mod-act-row">
-            <button class="btn btn-primary btn-sm" onclick="modAct2('validate','mq3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="20 6 9 17 4 12"/></svg>Publier</button>
             <button class="btn btn-danger btn-sm" onclick="modAct2('delete','mq3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Supprimer</button>
-            <button class="btn btn-warn btn-sm" onclick="openSuspendModal('MindfulCoder')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>Suspendre</button>
-            <button class="btn btn-danger btn-sm" onclick="openBanModal('MindfulCoder','mq3')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Bannir</button>
           </div>
         </div>
         <div id="mprev-empty" style="display:none" class="empty-state">
@@ -1105,152 +1101,80 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
     </div>
   </div>
   <div class="mod-tab-content" id="mod-reports">
-    <div class="rep-card" id="rp1">
+    <div class="rep-card" id="rp1" data-user="HackAnon88">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
         <div style="display:flex;align-items:center;gap:9px"><div class="av av4" style="width:28px;height:28px;font-size:10px">H</div><div><div style="font-size:13px;font-weight:600;color:var(--t1)">Publication de HackAnon88</div><div class="pmeta" style="margin-top:2px"><span class="chip chip-red" style="font-size:9.5px">Harcèlement</span><span class="ptime">il y a 30 min · 2 signalements</span></div></div></div>
       </div>
       <div class="rep-content">"Les gens qui pensent différemment de moi sur ce sujet sont franchement stupides et dangereux…"</div>
       <div style="margin-bottom:10px;display:flex;gap:5px;flex-wrap:wrap"><span class="rep-reason-chip">Harcèlement</span><span class="rep-reason-chip">Contenu offensant</span></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-danger btn-sm" onclick="repAct('delete','rp1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer</button>
-        <button class="btn btn-warn btn-sm" onclick="openSuspendModal('HackAnon88')">Suspendre</button>
-        <button class="btn btn-danger btn-sm" onclick="openBanModal('HackAnon88','rp1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Bannir</button>
-        <button class="btn btn-outline btn-sm" onclick="repAct('ignore','rp1')">Ignorer</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteUserCascade('HackAnon88')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer utilisateur (cascade)</button>
       </div>
     </div>
-    <div class="rep-card" id="rp2">
+    <div class="rep-card" id="rp2" data-user="TechPro2025">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
         <div style="display:flex;align-items:center;gap:9px"><div class="av av5" style="width:28px;height:28px;font-size:10px">T</div><div><div style="font-size:13px;font-weight:600;color:var(--t1)">Publication de TechPro2025</div><div class="pmeta" style="margin-top:2px"><span class="chip chip-red" style="font-size:9.5px">Spam</span><span class="ptime">il y a 1h · 1 signalement</span></div></div></div>
       </div>
       <div class="rep-content">"Achetez mes formations en ligne ! Meilleur prix garanti ! Lien en bio !…"</div>
       <div style="margin-bottom:10px;display:flex;gap:5px;flex-wrap:wrap"><span class="rep-reason-chip">Spam</span><span class="rep-reason-chip">Publicité non sollicitée</span></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <button class="btn btn-danger btn-sm" onclick="repAct('delete','rp2')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer</button>
-        <button class="btn btn-warn btn-sm" onclick="openSuspendModal('TechPro2025')">Suspendre</button>
-        <button class="btn btn-outline btn-sm" onclick="repAct('ignore','rp2')">Ignorer</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteUserCascade('TechPro2025')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer utilisateur (cascade)</button>
       </div>
     </div>
-  </div>
-  <div class="mod-tab-content" id="mod-banned">
-    <div class="ban-card" id="bc1"><div class="av av4" style="width:38px;height:38px;font-size:13px">H</div><div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:var(--t1)">HackAnon88</div><div style="font-size:12px;color:var(--t2);margin-top:1px">Banni le 12 avril 2025 par ModTeam</div><div style="margin-top:4px"><span class="rep-reason-chip" style="background:var(--err-bg);color:var(--err);border-color:rgba(192,57,43,0.2)">Harcèlement répété</span></div></div><div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end"><span class="status-chip sc-banned">Banni définitif</span><button class="btn btn-outline btn-sm" onclick="unbanUser('HackAnon88','bc1')">Lever le ban</button></div></div>
-    <div class="ban-card" id="bc2"><div class="av av5" style="width:38px;height:38px;font-size:13px">S</div><div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:var(--t1)">SpamBot99</div><div style="font-size:12px;color:var(--t2);margin-top:1px">Banni le 8 avril 2025</div><div style="margin-top:4px"><span class="rep-reason-chip" style="background:var(--err-bg);color:var(--err);border-color:rgba(192,57,43,0.2)">Spam massif</span></div></div><div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end"><span class="status-chip sc-banned">Banni définitif</span><button class="btn btn-outline btn-sm" onclick="unbanUser('SpamBot99','bc2')">Lever le ban</button></div></div>
-    <div class="ban-card" id="bc3"><div class="av av3" style="width:38px;height:38px;font-size:13px">T</div><div style="flex:1"><div style="font-size:13.5px;font-weight:600;color:var(--t1)">ToxicUser44</div><div style="font-size:12px;color:var(--t2);margin-top:1px">Suspendu jusqu'au 20 avril 2025</div><div style="margin-top:4px"><span class="rep-reason-chip">Contenu inapproprié</span></div></div><div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end"><span class="status-chip sc-suspended">Suspendu</span><button class="btn btn-outline btn-sm" onclick="unbanUser('ToxicUser44','bc3')">Lever la suspension</button></div></div>
   </div>
 </div>
 
 <!-- ADMIN -->
 <div class="page" id="p-admin">
   <div class="page-head"><h1 class="page-title">Administration</h1></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+    <div class="stat-card"><div class="stat-card-label">Utilisateurs</div><div class="stat-card-value color-ok">4</div><div class="stat-card-sub color-ok">Comptes visibles</div></div>
+    <div class="stat-card"><div class="stat-card-label">Topics</div><div class="stat-card-value" style="color:var(--accent)">3</div><div class="stat-card-sub" style="color:var(--accent)">Catégories actives</div></div>
+    <div class="stat-card"><div class="stat-card-label">Signalements</div><div class="stat-card-value color-err" id="admin-reports-count">2</div><div class="stat-card-sub color-err">À traiter</div></div>
+  </div>
   <div class="admin-wrap">
     <div class="admin-nav">
-      <button class="admin-nav-item active" onclick="swAdmin(this,'ao')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Vue d'ensemble</button>
-      <button class="admin-nav-item" onclick="swAdmin(this,'au')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Utilisateurs</button>
-      <button class="admin-nav-item" onclick="swAdmin(this,'amods')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Modérateurs <span id="adminModBadge" style="background:var(--accent-soft);color:var(--accent);font-size:9.5px;padding:1px 5px;border-radius:7px;margin-left:2px;font-weight:700">12</span></button>
+      <button class="admin-nav-item active" onclick="swAdmin(this,'au')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Utilisateurs</button>
       <button class="admin-nav-item" onclick="swAdmin(this,'at')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Topics</button>
       <button class="admin-nav-item" onclick="swAdmin(this,'asig')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>Signalements <span id="adminSigBadge" style="background:var(--err-bg);color:var(--err);font-size:9.5px;padding:1px 5px;border-radius:7px;margin-left:2px;font-weight:700">2</span></button>
     </div>
     <div>
-      <!-- Overview panel -->
-      <div class="admin-panel on" id="ao">
-        <div class="stat-grid">
-          <div class="stat-card"><div class="stat-card-label">Membres inscrits</div><div class="stat-card-value">1 248</div><div class="stat-card-sub color-ok">+24 ce mois</div></div>
-          <div class="stat-card"><div class="stat-card-label">Publications</div><div class="stat-card-value">3 891</div><div class="stat-card-sub color-ok">+156 ce mois</div></div>
-          <div class="stat-card"><div class="stat-card-label">Signalements</div><div class="stat-card-value color-warn">6</div><div class="stat-card-sub color-warn">À traiter</div></div>
-          <div class="stat-card"><div class="stat-card-label">Modérateurs actifs</div><div class="stat-card-value">8</div><div class="stat-card-sub color-ok">+2 ce mois</div></div>
-        </div>
-        <div class="admin-section-header"><div class="admin-section-title">Activité récente</div></div>
-        <div class="card" style="overflow:hidden">
-          <div class="activity-item"><div class="ai-icon ni-system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="notif-msg">DevAnonyme promu Modérateur<div class="notif-time">il y a 2h</div></div></div>
-          <div class="activity-item"><div class="ai-icon ni-comment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="notif-msg">3 nouvelles inscriptions<div class="notif-time">il y a 4h</div></div></div>
-          <div class="activity-item" style="border-bottom:none"><div class="ai-icon" style="background:var(--err-bg);color:var(--err)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div><div class="notif-msg">2 nouveaux signalements reçus<div class="notif-time">il y a 6h</div></div></div>
-        </div>
-      </div>
-
       <!-- Users panel -->
-      <div class="admin-panel" id="au">
+      <div class="admin-panel on" id="au">
         <div class="admin-section-header">
           <div class="admin-section-title">Gestion des membres</div>
           <div style="position:relative">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);width:12px;height:12px;color:var(--t3)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <input class="form-inp" style="height:32px;padding-left:28px;width:200px;font-size:12.5px" placeholder="Rechercher par email…">
+            <input class="form-inp" style="height:32px;padding-left:28px;width:220px;font-size:12.5px" placeholder="Rechercher par pseudo/email…">
           </div>
         </div>
         <div class="full-width-table"><table class="data-table">
-          <thead><tr><th>Utilisateur</th><th>Email</th><th>Rôle</th><th>Statut</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Nom appli</th><th>Email</th><th>Nom complet réel</th><th>Téléphone</th><th>Actions</th></tr></thead>
           <tbody>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av1" style="width:22px;height:22px;font-size:9px">C</div><span style="font-size:13px">CyberNinja99</span></div></td><td style="color:var(--t2);font-size:12px">cyber99@gmail.com</td><td><span class="role-badge rb-client">Membre</span></td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('CyberNinja99 promu Modérateur','s')">Promouvoir</button><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'CyberNinja99')">Suppr.</button></div></td></tr>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av2" style="width:22px;height:22px;font-size:9px">D</div><span style="font-size:13px">DevAnonyme</span></div></td><td style="color:var(--t2);font-size:12px">dev.anon@proton.me</td><td><span class="role-badge rb-mod">Modérateur</span></td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="toast('Rôle révoqué','i')">Révoquer</button><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'DevAnonyme')">Suppr.</button></div></td></tr>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av4" style="width:22px;height:22px;font-size:9px">H</div><span style="font-size:13px">HackAnon88</span></div></td><td style="color:var(--t2);font-size:12px">h.anon88@mail.com</td><td><span class="role-badge rb-client">Membre</span></td><td><span class="status-chip sc-banned">Banni</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Compte réactivé','s')">Réactiver</button><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'HackAnon88')">Suppr.</button></div></td></tr>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av1" style="width:22px;height:22px;font-size:9px">E</div><span style="font-size:13px">EtoileLibre42</span></div></td><td style="color:var(--t2);font-size:12px">etoile42@iit.tn</td><td><span class="role-badge rb-admin">Admin</span></td><td><span class="status-chip sc-active">Actif</span></td><td><span style="font-size:11.5px;color:var(--t3)">Compte courant</span></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av1" style="width:22px;height:22px;font-size:9px">C</div><span style="font-size:13px">CyberNinja99</span></div></td><td style="color:var(--t2);font-size:12px">cyber99@gmail.com</td><td style="color:var(--t2);font-size:12px">Karim Ben Salem</td><td style="color:var(--t2);font-size:12px">+216 21 111 222</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'CyberNinja99')">Supprimer</button></div></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av2" style="width:22px;height:22px;font-size:9px">D</div><span style="font-size:13px">DevAnonyme</span></div></td><td style="color:var(--t2);font-size:12px">dev.anon@proton.me</td><td style="color:var(--t2);font-size:12px">Aymen Trabelsi</td><td style="color:var(--t2);font-size:12px">+216 55 333 888</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'DevAnonyme')">Supprimer</button></div></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av4" style="width:22px;height:22px;font-size:9px">H</div><span style="font-size:13px">HackAnon88</span></div></td><td style="color:var(--t2);font-size:12px">h.anon88@mail.com</td><td style="color:var(--t2);font-size:12px">Mourad Gharbi</td><td style="color:var(--t2);font-size:12px">+216 98 444 777</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="adminDeleteUser(this,'HackAnon88')">Supprimer</button></div></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av1" style="width:22px;height:22px;font-size:9px">E</div><span style="font-size:13px">EtoileLibre42</span></div></td><td style="color:var(--t2);font-size:12px">etoile42@iit.tn</td><td style="color:var(--t2);font-size:12px">Mahmoud Kchaou</td><td style="color:var(--t2);font-size:12px">+216 20 000 000</td><td><span style="font-size:11.5px;color:var(--t3)">Compte courant</span></td></tr>
           </tbody>
         </table></div>
-      </div>
-
-      <!-- Moderators panel with candidates -->
-      <div class="admin-panel" id="amods">
-        <div class="admin-section-header">
-          <div class="admin-section-title">Équipe de modération</div>
-          <div style="font-size:12px;color:var(--t2)">8 modérateurs actifs</div>
-        </div>
-        <div class="full-width-table" style="margin-bottom:20px"><table class="data-table">
-          <thead><tr><th>Modérateur</th><th>ID</th><th>Email</th><th>Depuis</th><th>Actions</th></tr></thead>
-          <tbody>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#1862D2,#0A3D80);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">S</div><span style="font-size:13px">Shadow_Walker</span></div></td><td style="color:var(--t3);font-size:11.5px">9621-XP</td><td style="color:var(--t2);font-size:12px">walker@veil.com</td><td style="color:var(--t2);font-size:12px">12 Oct 2023</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="toast('Rôle de Shadow_Walker révoqué','i')">Révoquer</button></div></td></tr>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7C7FE8,#534AB7);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff">G</div><span style="font-size:13px">Ghost_Admin</span></div></td><td style="color:var(--t3);font-size:11.5px">1102-LK</td><td style="color:var(--t2);font-size:12px">ghost@secure.io</td><td style="color:var(--t2);font-size:12px">18 Nov 2022</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="toast('Rôle de Ghost_Admin révoqué','i')">Révoquer</button></div></td></tr>
-          <tr><td><div style="display:flex;align-items:center;gap:7px"><div class="av av2" style="width:22px;height:22px;font-size:9px">D</div><span style="font-size:13px">DevAnonyme</span></div></td><td style="color:var(--t3);font-size:11.5px">4432-ZM</td><td style="color:var(--t2);font-size:12px">dev.anon@proton.me</td><td style="color:var(--t2);font-size:12px">05 Jan 2024</td><td><div class="inline-actions"><button class="btn btn-danger btn-sm" onclick="toast('Rôle de DevAnonyme révoqué','i')">Révoquer</button></div></td></tr>
-          </tbody>
-        </table></div>
-
-        <div class="admin-section-header">
-          <div class="admin-section-title">Candidatures en attente</div>
-          <span style="background:var(--accent-soft);color:var(--accent);font-size:10.5px;padding:2px 7px;border-radius:8px;font-weight:600">12 en attente</span>
-        </div>
-        <div class="candidates-grid">
-          <div class="candidate-card">
-            <div style="display:flex;align-items:center;gap:9px">
-              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1862D2,#0A3D80);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">C</div>
-              <div><div style="font-size:13px;font-weight:600;color:var(--t1)">Cortex_99</div><span class="candidate-score score-high">Score: 94/100</span></div>
-            </div>
-            <div style="font-size:12px;color:var(--t2);line-height:1.55">"Je souhaite contribuer à maintenir un environnement sain…"</div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="acceptCandidate(this,'Cortex_99')">Accepter</button>
-              <button class="btn btn-danger btn-sm" style="flex:1;justify-content:center" onclick="refuseCandidate(this,'Cortex_99')">Refuser</button>
-            </div>
-          </div>
-          <div class="candidate-card">
-            <div style="display:flex;align-items:center;gap:9px">
-              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#534AB7,#3C3489);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">N</div>
-              <div><div style="font-size:13px;font-weight:600;color:var(--t1)">Night_Owl</div><span class="candidate-score score-mid">Score: 88/100</span></div>
-            </div>
-            <div style="font-size:12px;color:var(--t2);line-height:1.55">"Expérience passée sur des serveurs Discord communautaires…"</div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="acceptCandidate(this,'Night_Owl')">Accepter</button>
-              <button class="btn btn-danger btn-sm" style="flex:1;justify-content:center" onclick="refuseCandidate(this,'Night_Owl')">Refuser</button>
-            </div>
-          </div>
-          <div class="candidate-card">
-            <div style="display:flex;align-items:center;gap:9px">
-              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#1B7A4A,#0D4D2E);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff">V</div>
-              <div><div style="font-size:13px;font-weight:600;color:var(--t1)">Void_Watcher</div><span class="candidate-score score-low">Score: 62/100</span></div>
-            </div>
-            <div style="font-size:12px;color:var(--t2);line-height:1.55">"Spécialiste de la détection de bots et de spam. Je peux aider…"</div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center" onclick="acceptCandidate(this,'Void_Watcher')">Accepter</button>
-              <button class="btn btn-danger btn-sm" style="flex:1;justify-content:center" onclick="refuseCandidate(this,'Void_Watcher')">Refuser</button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Topics panel -->
       <div class="admin-panel" id="at">
-        <div class="admin-section-header"><div class="admin-section-title">Topics de la plateforme</div><button class="btn btn-primary btn-sm" onclick="toast('Formulaire de création — bientôt disponible','i')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button></div>
+        <div class="admin-section-header"><div class="admin-section-title">Topics de la plateforme</div><button class="btn btn-primary btn-sm" onclick="toggleAdminTopicForm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M12 5v14M5 12h14"/></svg>Ajouter</button></div>
+        <div id="admin-topic-form" style="display:none;background:var(--bg-surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
+          <div style="display:grid;grid-template-columns:1fr 150px auto;gap:8px;align-items:end">
+            <div><label class="form-label">Nom du topic</label><input class="form-inp" id="new-topic-name" placeholder="Ex: Cybersécurité"></div>
+            <div><label class="form-label">Type icône</label><select class="select-inp" id="new-topic-style"><option value="ti-blue">Bleu</option><option value="ti-green">Vert</option><option value="ti-amber">Ambre</option><option value="ti-red">Rouge</option></select></div>
+            <button class="btn btn-primary" onclick="addAdminTopic()">Créer</button>
+          </div>
+        </div>
         <div class="full-width-table"><table class="data-table">
           <thead><tr><th>Topic</th><th>Publications</th><th>Membres</th><th>Statut</th><th>Actions</th></tr></thead>
-          <tbody>
-          <tr id="topic-tech"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-blue" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><span style="font-size:13px">Technologie</span></div></td><td style="font-size:13px">3.2k</td><td style="font-size:13px">12.4k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Technologie','i')">Éditer</button><button class="btn btn-danger btn-sm" onclick="adminDeleteTopic(this,'Technologie')">Suppr.</button></div></td></tr>
-          <tr id="topic-sante"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-green" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><span style="font-size:13px">Santé</span></div></td><td style="font-size:13px">2.1k</td><td style="font-size:13px">8.8k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Santé','i')">Éditer</button><button class="btn btn-danger btn-sm" onclick="adminDeleteTopic(this,'Santé')">Suppr.</button></div></td></tr>
-          <tr id="topic-edu"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-amber" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><span style="font-size:13px">Éducation</span></div></td><td style="font-size:13px">1.4k</td><td style="font-size:13px">6.2k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Éducation','i')">Éditer</button><button class="btn btn-danger btn-sm" onclick="adminDeleteTopic(this,'Éducation')">Suppr.</button></div></td></tr>
+          <tbody id="admin-topics-body">
+          <tr id="topic-tech"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-blue" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><span style="font-size:13px">Technologie</span></div></td><td style="font-size:13px">3.2k</td><td style="font-size:13px">12.4k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Technologie','i')">Éditer</button></div></td></tr>
+          <tr id="topic-sante"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-green" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><span style="font-size:13px">Santé</span></div></td><td style="font-size:13px">2.1k</td><td style="font-size:13px">8.8k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Santé','i')">Éditer</button></div></td></tr>
+          <tr id="topic-edu"><td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon ti-amber" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><span style="font-size:13px">Éducation</span></div></td><td style="font-size:13px">1.4k</td><td style="font-size:13px">6.2k</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast('Édition de Éducation','i')">Éditer</button></div></td></tr>
           </tbody>
         </table></div>
       </div>
@@ -1258,22 +1182,18 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
       <!-- Reports panel -->
       <div class="admin-panel" id="asig">
         <div class="admin-section-header"><div class="admin-section-title">Signalements à traiter</div><span style="font-size:12px;color:var(--t2)">2 en attente</span></div>
-        <div class="rep-card" id="adm-rp1">
+        <div class="rep-card" id="adm-rp1" data-user="HackAnon88">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div class="av av4" style="width:26px;height:26px;font-size:10px">H</div><div><div style="font-size:13px;font-weight:600;color:var(--t1)">Publication de HackAnon88</div><div class="pmeta" style="margin-top:2px"><span class="chip chip-red" style="font-size:9.5px">Harcèlement</span><span class="ptime">il y a 30 min · 2 signalements</span></div></div></div>
           <div class="rep-content">"Les gens qui pensent différemment sont franchement stupides…"</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="btn btn-danger btn-sm" onclick="repAct('delete','adm-rp1');decSig()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer</button>
-            <button class="btn btn-danger btn-sm" onclick="openBanModal('HackAnon88','adm-rp1')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>Bannir</button>
-            <button class="btn btn-outline btn-sm" onclick="repAct('ignore','adm-rp1');decSig()">Ignorer</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUserCascade('HackAnon88')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer utilisateur (cascade)</button>
           </div>
         </div>
-        <div class="rep-card" id="adm-rp2">
+        <div class="rep-card" id="adm-rp2" data-user="TechPro2025">
           <div style="display:flex;align-items:center;gap:9px;margin-bottom:9px"><div class="av av5" style="width:26px;height:26px;font-size:10px">T</div><div><div style="font-size:13px;font-weight:600;color:var(--t1)">Publication de TechPro2025</div><div class="pmeta" style="margin-top:2px"><span class="chip chip-red" style="font-size:9.5px">Spam</span><span class="ptime">il y a 1h · 1 signalement</span></div></div></div>
           <div class="rep-content">"Achetez mes formations ! Meilleur prix garanti !…"</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="btn btn-danger btn-sm" onclick="repAct('delete','adm-rp2');decSig()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer</button>
-            <button class="btn btn-warn btn-sm" onclick="openSuspendModal('TechPro2025')">Suspendre</button>
-            <button class="btn btn-outline btn-sm" onclick="repAct('ignore','adm-rp2');decSig()">Ignorer</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUserCascade('TechPro2025')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>Supprimer utilisateur (cascade)</button>
           </div>
         </div>
       </div>
@@ -1330,13 +1250,62 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
 </div>
 
 <div class="overlay" id="createM">
-  <div class="modal" style="max-width:490px">
+  <div class="modal" style="max-width:520px">
     <div class="modal-title">Nouvelle publication</div>
     <button class="modal-close" onclick="closeM('createM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="anon-pill" style="margin-bottom:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Publication anonyme</div>
-    <div class="form-row"><label class="form-label">Titre <span style="color:var(--t3)">(optionnel)</span></label><input class="form-inp" placeholder="Donnez un titre à votre post" maxlength="100"></div>
-    <div class="form-row"><label class="form-label">Contenu <span style="color:var(--err)">*</span></label><textarea class="form-inp" rows="4" placeholder="Partagez vos pensées anonymement…" id="pc" oninput="ucc(this)" maxlength="500" style="height:auto"></textarea><div class="char-count" id="cc">0/500</div></div>
-    <div class="form-row"><label class="form-label">Topic <span style="color:var(--err)">*</span></label><select class="select-inp"><option value="">Choisissez un topic…</option><option>Technologie</option><option>Santé</option><option>Éducation</option><option>Loi & Droit</option><option>Société</option><option>Environnement</option></select></div>
+    
+    <div class="anon-pill" style="margin-bottom:12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      Publication anonyme
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Titre <span style="color:var(--t3)">(optionnel)</span></label>
+      <input class="form-inp" id="post-title" placeholder="Donnez un titre à votre post" maxlength="100">
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Contenu <span style="color:var(--t3)" id="content-required">(optionnel si photo)</span></label>
+      <textarea class="form-inp" rows="4" placeholder="Partagez vos pensées anonymement…" id="pc" oninput="ucc(this)" maxlength="500" style="height:auto"></textarea>
+      <div class="char-count" id="cc">0/500</div>
+    </div>
+
+    <!-- Zone d'upload photo -->
+    <div class="form-row">
+      <label class="form-label">Photo <span style="color:var(--t3)">(optionnel)</span></label>
+      <div style="position:relative">
+        <input type="file" id="post-image" accept="image/*" style="display:none" onchange="handleImageUpload(this)">
+        <button class="btn btn-outline" onclick="document.getElementById('post-image').click()" style="width:100%;justify-content:center;gap:8px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <span id="upload-btn-text">Ajouter une photo</span>
+        </button>
+      </div>
+      <!-- Prévisualisation de l'image -->
+      <div id="image-preview" style="display:none;margin-top:10px;position:relative">
+        <img id="preview-img" style="width:100%;border-radius:8px;border:1px solid var(--border)">
+        <button onclick="removeImage()" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,0.7);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Topic <span style="color:var(--err)">*</span></label>
+      <select class="select-inp" id="post-topic">
+        <option value="">Choisissez un topic…</option>
+        <option>Technologie</option>
+        <option>Santé</option>
+        <option>Éducation</option>
+        <option>Loi & Droit</option>
+        <option>Société</option>
+        <option>Environnement</option>
+      </select>
+    </div>
+
     <div style="display:flex;gap:7px;justify-content:flex-end">
       <button class="btn btn-outline" onclick="closeM('createM')">Annuler</button>
       <button class="btn btn-primary" onclick="subPost()">Publier</button>
@@ -1349,19 +1318,7 @@ body.dark .modal-warning{border-color:rgba(232,116,116,0.18)}
   <div class="modal">
     <div class="modal-title">Modifier le profil</div>
     <button class="modal-close" onclick="closeM('editM')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
-      <div style="text-align:center">
-        <div class="av-upload-area" id="av-upload-wrap">
-          <div id="av-preview" class="av av1" style="width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff">E</div>
-          <input type="file" accept="image/*" onchange="handleAvatar(this)" title="Changer la photo de profil">
-        </div>
-        <div style="font-size:11px;color:var(--t3);margin-top:5px">Cliquer pour modifier</div>
-      </div>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px">Photo de profil</div>
-        <div style="font-size:12px;color:var(--t2);line-height:1.5">Formats acceptés : PNG, JPG. Max 2MB. Votre photo reste visible uniquement pour vous — les autres voient votre pseudonyme anonyme.</div>
-      </div>
-    </div>
+    <div style="font-size:12px;color:var(--t2);background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-bottom:12px">La photo de profil n'est pas modifiable ici. L'avatar sera sélectionné lors de l'inscription depuis la liste fournie.</div>
     <div class="form-row"><label class="form-label">Pseudonyme</label><input class="form-inp" id="edit-username" value="EtoileLibre42"></div>
     <div class="form-row"><label class="form-label">Bio <span style="color:var(--t3)">(optionnel)</span></label><textarea class="form-inp" rows="2" placeholder="Partagez quelques mots sur vous…" style="height:auto"></textarea></div>
     <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:8px">
@@ -1377,22 +1334,151 @@ let cur='accueil';
 let sbCollapsed=false;
 let obSlide=0;
 let activeHomeTopic='';
+let isAuthenticated=false;
+let currentUser=null;
 const LOGO_LIGHT_SRC='/assets/logo-light.png';
 const LOGO_DARK_SRC='/assets/logo-dark.png';
+const AUTH_SESSION_KEY='whisper_auth_session_v1';
+const USERS_KEY='whisper_users_v1';
 const lkS={},dkS={};
 let banTarget=null,banTargetCard=null;
 let suspendTarget=null;
 let suspendDur='1j';
-let currentAvatarSrc=null;
+
+// Gestion session expirée
+let _sessionExpiredHandled = false;
+function handleSessionExpired() {
+  if (_sessionExpiredHandled) return;
+  _sessionExpiredHandled = true;
+  localStorage.removeItem('whisper_api_token_v1');
+  localStorage.removeItem('whisper_api_user_v1');
+  localStorage.removeItem('whisper_auth_session_v1');
+  toast('Session expirée, reconnexion...', 'i');
+  setTimeout(() => window.location.assign('/'), 1500);
+}
 
 document.body.classList.add('dark');
 
+function getStoredUsers(){
+  try{return JSON.parse(localStorage.getItem(USERS_KEY)||'[]')||[];}catch{return[];}
+}
+
+function saveStoredUsers(users){
+  localStorage.setItem(USERS_KEY,JSON.stringify(users));
+}
+
+function seedDefaultUsers(){
+  const users=getStoredUsers();
+  if(users.length>0)return;
+  saveStoredUsers([{
+    firstName:'Mahmoud',
+    lastName:'Kchaou',
+    fullName:'Mahmoud Kchaou',
+    email:'etoile42@iit.tn',
+    phone:'+216 20 000 000',
+    username:'EtoileLibre42',
+    avatar:'E',
+    password:'whisper123',
+    role:'Administrateur'
+  }]);
+}
+
+function applyUserUI(user){
+  if(!user)return;
+  const uname=user.username||'Utilisateur';
+  const avatar=((user.avatar||uname.charAt(0)||'U')+'').charAt(0).toUpperCase();
+  const role=user.role||'Membre';
+  const topAv=document.getElementById('topbar-avatar');if(topAv)topAv.textContent=avatar;
+  const sbAv=document.getElementById('sb-av');if(sbAv)sbAv.textContent=avatar;
+  const cpAv=document.getElementById('compose-av');if(cpAv)cpAv.textContent=avatar;
+  const cmAv=document.getElementById('comment-av');if(cmAv)cmAv.textContent=avatar;
+  const prof=document.getElementById('prof-username');if(prof)prof.textContent=uname;
+  const sbName=document.querySelector('.sb-uname');if(sbName)sbName.textContent=uname;
+  const sbRole=document.querySelector('.sb-urole');if(sbRole)sbRole.textContent=role;
+  const editName=document.getElementById('edit-username');if(editName)editName.value=uname;
+
+  // Gestion des permissions selon le rôle
+  const isMembre = role === 'Membre';
+  const isModo = role === 'Moderateur';
+  const isAdmin = role === 'Administrateur';
+
+  // Cacher la section Gestion complète pour les Membres
+  const sbBottom = document.querySelector('.sb-bottom');
+  if (sbBottom) sbBottom.style.display = isMembre ? 'none' : 'block';
+
+  // Cacher les boutons individuels selon le rôle
+  const modBtn = document.querySelector('[data-p="moderation"]');
+  const adminBtn = document.querySelector('[data-p="admin"]');
+  if (modBtn) modBtn.style.display = (isModo || isAdmin) ? 'flex' : 'none';
+  if (adminBtn) adminBtn.style.display = isAdmin ? 'flex' : 'none';
+  
+  // Initialiser les compteurs de modération pour les modérateurs et admins
+  if (isModo || isAdmin) {
+    updateModerationCounters();
+  }
+  
+  // Initialiser les notifications pour tous les utilisateurs
+  updateNotificationBadge();
+}
+
+function setAuthUI(isAuth){
+  isAuthenticated=isAuth;
+  document.body.classList.toggle('auth-locked',!isAuth);
+  if(!isAuth){
+    sbCollapsed=false;
+    document.getElementById('sidebar-left')&&document.getElementById('sidebar-left').classList.remove('collapsed');
+    document.body.classList.remove('sb-collapsed');
+    document.querySelectorAll('.overlay.open').forEach(o=>o.classList.remove('open'));
+    closeProfileMenu();
+    closeTopicsPanel();
+  }
+}
+
+function getSessionUser(){
+  try{
+    const session=JSON.parse(localStorage.getItem(AUTH_SESSION_KEY)||'null');
+    if(!session||!session.email)return null;
+    const users=getStoredUsers();
+    return users.find(u=>(u.email||'').toLowerCase()===session.email.toLowerCase())||null;
+  }catch{return null;}
+}
+
+function saveSession(user){
+  localStorage.setItem(AUTH_SESSION_KEY,JSON.stringify({email:user.email}));
+}
+
+function logout(showToast=true){
+  const token = localStorage.getItem('whisper_api_token_v1');
+  // Appel API logout (fire & forget)
+  if(token) {
+    fetch('http://localhost:4000/api/auth/logout', {
+      method: 'POST', headers: { 'Authorization': `Bearer ${token}` }
+    }).catch(()=>{});
+  }
+  // Nettoyer immédiatement
+  localStorage.removeItem(AUTH_SESSION_KEY);
+  localStorage.removeItem('whisper_api_token_v1');
+  localStorage.removeItem('whisper_api_user_v1');
+  localStorage.removeItem('whisper_intro_seen');
+  currentUser = null;
+  // Redirection immédiate sans délai
+  window.location.assign('/');
+}
+
 function go(p){
+  const publicPages=['connexion','inscription'];
+  if(!isAuthenticated && !publicPages.includes(p))p='connexion';
+  if(isAuthenticated && publicPages.includes(p))p='accueil';
   closeProfileMenu();
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
   const t=document.getElementById('p-'+p);
   if(t){t.classList.add('on');cur=p;}
   document.querySelectorAll('.nav-item[data-p]').forEach(n=>n.classList.toggle('active',n.dataset.p===p));
+  
+  if(p === 'moderation') loadModerationPosts();
+  if(p === 'accueil') loadApprovedPosts();
+  if(p === 'profil') loadMyPosts();
+  
   window.scrollTo(0,0);
 }
 
@@ -1401,6 +1487,7 @@ function toggleSidebarCollapse(){
   const sb=document.getElementById('sidebar-left');
   sb.classList.toggle('collapsed',sbCollapsed);
   document.body.classList.toggle('sb-collapsed',sbCollapsed);
+  if(sbCollapsed)closeTopicsPanel();
 }
 
 function toggleProfileMenu(e){
@@ -1416,10 +1503,35 @@ function closeProfileMenu(){
 
 function handleProfileAction(targetPage){
   closeProfileMenu();
-  if(targetPage==='connexion'){
-    toast('Déconnecté','i');
+  if(targetPage==='logout' || targetPage==='connexion'){
+    logout();
+    return;
   }
   go(targetPage);
+}
+
+function togglePostComments(postId,e){
+  e&&e.stopPropagation();
+  const list=document.getElementById('home-comments-'+postId);
+  const box=document.getElementById('home-comment-box-'+postId);
+  if(!list||!box)return;
+  const next=list.style.display==='none' || !list.style.display;
+  list.style.display=next?'':'none';
+  box.style.display=next?'':'none';
+}
+
+function addInlineComment(postId,inputEl){
+  const txt=(inputEl&&inputEl.value||'').trim();
+  if(!txt){toast('Le commentaire est vide','e');return;}
+  const list=document.getElementById('home-comments-'+postId);
+  if(!list)return;
+  const row=document.createElement('div');
+  row.className='citem';
+  row.innerHTML='<div class="av av1" style="width:28px;height:28px;font-size:10px;flex-shrink:0">E</div><div><div class="cun">EtoileLibre42 <span class="ptime" style="font-weight:400;margin-left:5px">à l\'instant</span></div><div class="ctx"></div></div>';
+  row.querySelector('.ctx').textContent=txt;
+  list.appendChild(row);
+  inputEl.value='';
+  toast('Commentaire ajouté','s');
 }
 
 function toggleTopicsSection(e){
@@ -1555,7 +1667,438 @@ function setNotifFilter(btn){
 function subCmt(){const inp=document.getElementById('ci');if(!inp||!inp.value.trim()){toast('Le commentaire ne peut pas être vide','e');return;}toast('Commentaire publié','s');inp.value='';}
 function subReport(){const r=document.getElementById('rr');if(!r.value){toast('Veuillez choisir un motif','e');return;}closeM('reportM');toast('Signalement envoyé. Merci.','s');}
 function ucc(ta){const el=document.getElementById('cc');if(!el)return;const l=ta.value.length;el.textContent=l+'/500';el.style.color=l>=490?'var(--err)':l>=450?'var(--warn)':'var(--t3)';}
-function subPost(){const c=document.getElementById('pc');if(!c||!c.value.trim()){toast('Le contenu est requis','e');return;}closeM('createM');toast('Publication envoyée · en attente de validation','s');c.value='';}
+
+// Gestion de l'upload d'image pour les posts
+let selectedPostImage = null;
+
+function handleImageUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  
+  // Vérifier que c'est bien une image
+  if (!file.type.startsWith('image/')) {
+    toast('Veuillez sélectionner une image valide', 'e');
+    input.value = '';
+    return;
+  }
+  
+  // Vérifier la taille (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    toast('L\'image est trop volumineuse (max 5MB)', 'e');
+    input.value = '';
+    return;
+  }
+  
+  // Lire et afficher l'aperçu
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    selectedPostImage = e.target.result;
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    const uploadBtnText = document.getElementById('upload-btn-text');
+    
+    if (preview && previewImg && uploadBtnText) {
+      previewImg.src = selectedPostImage;
+      preview.style.display = 'block';
+      uploadBtnText.textContent = 'Changer la photo';
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage() {
+  selectedPostImage = null;
+  const input = document.getElementById('post-image');
+  const preview = document.getElementById('image-preview');
+  const uploadBtnText = document.getElementById('upload-btn-text');
+  
+  if (input) input.value = '';
+  if (preview) preview.style.display = 'none';
+  if (uploadBtnText) uploadBtnText.textContent = 'Ajouter une photo';
+}
+
+function subPost() {
+  const titleInput = document.getElementById('post-title');
+  const contentInput = document.getElementById('pc');
+  const topicSelect = document.getElementById('post-topic');
+  
+  const title = titleInput ? titleInput.value.trim() : '';
+  const content = contentInput ? contentInput.value.trim() : '';
+  const topic = topicSelect ? topicSelect.value : '';
+  
+  // Validation: au moins un contenu (texte OU image) doit être présent
+  if (!content && !selectedPostImage) {
+    toast('Veuillez ajouter du texte ou une photo', 'e');
+    return;
+  }
+  
+  // Le topic est obligatoire
+  if (!topic) {
+    toast('Veuillez choisir un topic', 'e');
+    return;
+  }
+  
+  // Envoyer au backend
+  const postData = {
+    title: title,
+    content: content,
+    image: selectedPostImage,
+    topic: topic
+  };
+  
+  // Afficher un indicateur de chargement
+  const submitBtn = document.querySelector('#createM .btn-primary');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Publication...';
+  submitBtn.disabled = true;
+  
+  fetch('http://localhost:4000/api/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    },
+    body: JSON.stringify(postData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.ok) {
+      // Réinitialiser le formulaire
+      if (titleInput) titleInput.value = '';
+      if (contentInput) contentInput.value = '';
+      if (topicSelect) topicSelect.value = '';
+      removeImage();
+      
+      // Fermer le modal et afficher le message de succès
+      closeM('createM');
+      toast('Publication envoyée · en attente de validation', 's');
+      
+      // Mettre à jour les compteurs si l'utilisateur est modérateur/admin
+      if (currentUser && ['Moderateur', 'Administrateur'].includes(currentUser.role)) {
+        updateModerationCounters();
+      }
+    } else {
+      toast(data.message || 'Erreur lors de la publication', 'e');
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    toast('Erreur de connexion', 'e');
+  })
+  .finally(() => {
+    // Restaurer le bouton
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
+}
+
+// Gestion des publications en attente
+const PENDING_POSTS_KEY = 'whisper_pending_posts_v1';
+const APPROVED_POSTS_KEY = 'whisper_approved_posts_v1';
+const NOTIFICATIONS_KEY = 'whisper_notifications_v1';
+
+function savePendingPost(post) {
+  try {
+    const pendingPosts = JSON.parse(localStorage.getItem(PENDING_POSTS_KEY) || '[]');
+    pendingPosts.push(post);
+    localStorage.setItem(PENDING_POSTS_KEY, JSON.stringify(pendingPosts));
+    updateModerationCounters();
+  } catch (e) {
+    console.error('Erreur sauvegarde post:', e);
+  }
+}
+
+function getPendingPosts() {
+  try {
+    return JSON.parse(localStorage.getItem(PENDING_POSTS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function getApprovedPosts() {
+  try {
+    return JSON.parse(localStorage.getItem(APPROVED_POSTS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function getNotifications() {
+  try {
+    return JSON.parse(localStorage.getItem(NOTIFICATIONS_KEY) || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function addNotification(notification) {
+  try {
+    const notifications = getNotifications();
+    notifications.unshift({
+      id: 'notif_' + Date.now(),
+      ...notification,
+      timestamp: new Date().toISOString(),
+      read: false
+    });
+    // Garder seulement les 50 dernières notifications
+    if (notifications.length > 50) {
+      notifications.splice(50);
+    }
+    localStorage.setItem(NOTIFICATIONS_KEY, JSON.stringify(notifications));
+    updateNotificationBadge();
+  } catch (e) {
+    console.error('Erreur sauvegarde notification:', e);
+  }
+}
+
+function updateNotificationBadge() {
+  fetch('http://localhost:4000/api/notifications', {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    }
+  })
+  .then(response => {
+    if (response.status === 401) { handleSessionExpired(); return null; }
+    return response.json();
+  })
+  .then(data => {
+    if (!data || !data.ok) return;
+    const unreadCount = data.notifications.filter(n => !n.read).length;
+    const badge = document.getElementById('nb2');
+    const dot = document.getElementById('ndot');
+    if (badge) { badge.textContent = unreadCount; badge.style.display = unreadCount > 0 ? '' : 'none'; }
+    if (dot) { dot.style.display = unreadCount > 0 ? 'block' : 'none'; }
+  })
+  .catch(() => {});
+}
+
+function updateModerationCounters() {
+  // Récupérer les posts en attente depuis l'API
+  fetch('http://localhost:4000/api/posts/pending', {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    }
+  })
+  .then(response => {
+    if (response.status === 401) { handleSessionExpired(); return null; }
+    return response.json();
+  })
+  .then(data => {
+    if (data.ok) {
+      const pendingCount = data.posts.length;
+      const pendingBadge = document.getElementById('pendingBadge');
+      const modPendingCount = document.getElementById('mod-pending-count');
+      
+      if (pendingBadge) pendingBadge.textContent = pendingCount;
+      if (modPendingCount) modPendingCount.textContent = pendingCount;
+    }
+  })
+  .catch(error => {
+    console.error('Erreur lors de la récupération des posts en attente:', error);
+  });
+}
+
+function loadModerationPosts() {
+  const modList = document.querySelector('#mod-pending .mod-list');
+  const modPreview = document.querySelector('#mod-pending .mod-preview');
+  
+  if (!modList || !modPreview) return;
+  
+  // Afficher un indicateur de chargement
+  modList.innerHTML = '<div style="padding:20px;text-align:center;color:var(--t3)">Chargement...</div>';
+  modPreview.innerHTML = '';
+  
+  // Récupérer les posts en attente depuis l'API
+  fetch('http://localhost:4000/api/posts/pending', {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (!data.ok) {
+      throw new Error(data.message || 'Erreur lors du chargement');
+    }
+    
+    const pendingPosts = data.posts;
+    
+    // Vider le contenu
+    modList.innerHTML = '';
+    modPreview.innerHTML = '';
+    
+    if (pendingPosts.length === 0) {
+      modPreview.innerHTML = `
+        <div id="mprev-empty" class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <p>File de modération vide</p>
+        </div>
+      `;
+      return;
+    }
+    
+    // Ajouter les posts en attente
+    pendingPosts.forEach((post, index) => {
+      const isFirst = index === 0;
+      const timeAgo = getTimeAgo(post.createdAt);
+      const topicColor = getTopicColor(post.topic);
+      
+      // Item dans la liste
+      const listItem = document.createElement('div');
+      listItem.className = `mod-item ${isFirst ? 'active' : ''}`;
+      listItem.id = `mq-${post.id}`;
+      listItem.onclick = () => selMod(listItem, `mprev-${post.id}`);
+      listItem.innerHTML = `
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+          <div class="av av1" style="width:22px;height:22px;font-size:9px">${post.authorAvatar}</div>
+          <div style="font-size:12.5px;font-weight:600;color:var(--t1)">${post.author}</div>
+          <span class="chip ${topicColor}" style="font-size:9.5px">${post.topic}</span>
+        </div>
+        <div style="font-size:12.5px;color:var(--t2);line-height:1.5">${post.content.substring(0, 50)}${post.content.length > 50 ? '…' : ''}</div>
+        <div style="font-size:10.5px;color:var(--t3);margin-top:4px">${timeAgo}</div>
+      `;
+      modList.appendChild(listItem);
+      
+      // Prévisualisation
+      const previewItem = document.createElement('div');
+      previewItem.id = `mprev-${post.id}`;
+      previewItem.className = 'mprevcontent';
+      previewItem.style.display = isFirst ? 'block' : 'none';
+      
+      let imageHtml = '';
+      if (post.image) {
+        imageHtml = `<div style="margin:12px 0"><img src="${post.image}" style="width:100%;max-height:300px;object-fit:cover;border-radius:8px;border:1px solid var(--border)"></div>`;
+      }
+      
+      previewItem.innerHTML = `
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px">
+          <div class="av av1">${post.authorAvatar}</div>
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--t1)">${post.author}</div>
+            <div class="pmeta">
+              <span class="chip ${topicColor}">${post.topic}</span>
+              <span class="ptime">${timeAgo}</span>
+            </div>
+          </div>
+        </div>
+        ${post.title ? `<div style="font-size:16px;font-weight:600;color:var(--t1);margin-bottom:8px">${post.title}</div>` : ''}
+        <div style="font-size:14px;color:var(--t1);line-height:1.75;margin-bottom:0;padding:12px;background:var(--bg-input);border-radius:8px;border-left:3px solid var(--accent-border)">${post.content}</div>
+        ${imageHtml}
+        <div class="mod-act-row">
+          <button class="btn btn-success btn-sm" onclick="approvePost('${post.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Accepter
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="rejectPost('${post.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            Rejeter
+          </button>
+        </div>
+      `;
+      modPreview.appendChild(previewItem);
+    });
+    
+    updateModerationCounters();
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    modList.innerHTML = '<div style="padding:20px;text-align:center;color:var(--err)">Erreur lors du chargement</div>';
+  });
+}
+
+function approvePost(postId) {
+  const btn = event.target.closest('button');
+  const originalText = btn.textContent;
+  btn.textContent = 'Traitement...';
+  btn.disabled = true;
+  
+  fetch(`http://localhost:4000/api/posts/${postId}/approve`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.ok) {
+      toast('Publication approuvée et notification envoyée', 's');
+      loadModerationPosts(); // Recharger la liste
+    } else {
+      toast(data.message || 'Erreur lors de l\'approbation', 'e');
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    toast('Erreur de connexion', 'e');
+  })
+  .finally(() => {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  });
+}
+
+function rejectPost(postId) {
+  const btn = event.target.closest('button');
+  const originalText = btn.textContent;
+  btn.textContent = 'Traitement...';
+  btn.disabled = true;
+  
+  fetch(`http://localhost:4000/api/posts/${postId}/reject`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('whisper_api_token_v1')}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.ok) {
+      toast('Publication rejetée et notification envoyée', 'i');
+      loadModerationPosts(); // Recharger la liste
+    } else {
+      toast(data.message || 'Erreur lors du rejet', 'e');
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    toast('Erreur de connexion', 'e');
+  })
+  .finally(() => {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  });
+}
+
+function getTimeAgo(timestamp) {
+  const now = new Date();
+  const postTime = new Date(timestamp);
+  const diffMs = now - postTime;
+  const diffMins = Math.floor(diffMs / (1000 * 60));
+  
+  if (diffMins < 1) return 'à l\'instant';
+  if (diffMins < 60) return `il y a ${diffMins} min`;
+  
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `il y a ${diffHours}h`;
+  
+  const diffDays = Math.floor(diffHours / 24);
+  return `il y a ${diffDays}j`;
+}
+
+function getTopicColor(topic) {
+  const colors = {
+    'Technologie': 'chip-blue',
+    'Santé': 'chip-green',
+    'Éducation': 'chip-amber',
+    'Loi & Droit': 'chip-red',
+    'Société': 'chip-gray',
+    'Environnement': 'chip-teal'
+  };
+  return colors[topic] || 'chip-gray';
+}
 
 function toggleFollowBtn(btn,e){
   e&&e.stopPropagation();
@@ -1566,12 +2109,25 @@ function toggleFollowBtn(btn,e){
 
 function continueFromIntro(){
   localStorage.setItem('whisper_intro_seen','1');
-  go('accueil');
+  go(isAuthenticated?'accueil':'connexion');
   toast('Bienvenue sur Whisper','s');
 }
 
-function doLogin(){const e=document.getElementById('le');if(!e||!e.value){toast('Veuillez saisir votre identifiant','e');return;}toast('Connexion en cours…','i');setTimeout(()=>{go('accueil');toast('Bienvenue sur Whisper','s');},700);}
-function doReg(){toast('Création du compte…','i');setTimeout(()=>{go('onboarding');toast('Compte créé avec succès','s');},700);}
+function doLogin(){
+  // Rediriger vers l'app React pour l'authentification via l'API
+  toast('Redirection vers la page de connexion...','i');
+  setTimeout(() => {
+    window.location.assign('/?auth=login');
+  }, 300);
+}
+
+function doReg(){
+  // Rediriger vers l'app React pour l'inscription via l'API
+  toast('Redirection vers la page d\'inscription...','i');
+  setTimeout(() => {
+    window.location.assign('/?auth=register');
+  }, 300);
+}
 function tp(id){const inp=document.getElementById(id);inp.type=inp.type==='password'?'text':'password';}
 function nxs(){
   const slides=document.querySelectorAll('.ob-slide');
@@ -1591,23 +2147,7 @@ function selMod(el,prevId){
   const prev=document.getElementById(prevId);if(prev)prev.style.display='block';
 }
 
-function modAct2(action,cardId){
-  toast(action==='validate'?'Publication validée et publiée':'Publication supprimée',action==='validate'?'s':'i');
-  const card=document.getElementById(cardId);
-  if(card){card.style.opacity='0';card.style.transition='opacity .3s';
-    setTimeout(()=>{card.remove();
-      const remaining=document.querySelectorAll('#mod-pending .mod-item');
-      const cnt=remaining.length;
-      const b=document.getElementById('pendingBadge');if(b)b.textContent=cnt;
-      const sc=document.getElementById('mod-pending-count');if(sc)sc.textContent=cnt;
-      if(cnt===0){
-        document.querySelectorAll('.mprevcontent').forEach(p=>p.style.display='none');
-        const em=document.getElementById('mprev-empty');if(em)em.style.display='block';
-      } else {
-        remaining[0].click();
-      }
-    },300);}
-}
+// Ancienne fonction modAct2 remplacée par approvePost() et rejectPost()
 
 function switchModTab(btn,tabId){
   btn.closest('.feed-tabs').querySelectorAll('.feed-tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');
@@ -1624,6 +2164,64 @@ function switchTab(btn,tabId){
 function repAct(action,cardId){
   toast(action==='delete'?'Contenu supprimé':'Signalement ignoré',action==='delete'?'s':'i');
   const card=document.getElementById(cardId);if(card){card.style.opacity='0';card.style.transition='opacity .3s';setTimeout(()=>card.remove(),300);}
+}
+
+function refreshReportCounters(){
+  const modCount=document.querySelectorAll('#mod-reports .rep-card').length;
+  const adminCount=document.querySelectorAll('#asig .rep-card').length;
+  const count=Math.min(modCount,adminCount);
+  const rb=document.getElementById('reportsBadge');if(rb)rb.textContent=count;
+  const mrc=document.getElementById('mod-reports-count');if(mrc)mrc.textContent=count;
+  const asb=document.getElementById('adminSigBadge');if(asb)asb.textContent=count;
+  const arc=document.getElementById('admin-reports-count');if(arc)arc.textContent=count;
+}
+
+function deleteUserCascade(username){
+  document.querySelectorAll('.rep-card[data-user="'+username+'"]').forEach(card=>{
+    card.style.opacity='0';
+    card.style.transition='opacity .25s';
+    setTimeout(()=>card.remove(),250);
+  });
+  document.querySelectorAll('#p-accueil .home-post').forEach(card=>{
+    const txt=(card.textContent||'').toLowerCase();
+    if(txt.includes(username.toLowerCase())){
+      card.style.opacity='0';
+      card.style.transition='opacity .25s';
+      setTimeout(()=>card.remove(),250);
+    }
+  });
+  document.querySelectorAll('#au tbody tr').forEach(row=>{
+    if((row.textContent||'').toLowerCase().includes(username.toLowerCase())){
+      row.style.opacity='0';
+      row.style.transition='opacity .25s';
+      setTimeout(()=>row.remove(),250);
+    }
+  });
+  setTimeout(refreshReportCounters,300);
+  toast('Utilisateur '+username+' supprimé (cascade)','s');
+}
+
+function toggleAdminTopicForm(){
+  const form=document.getElementById('admin-topic-form');
+  if(!form)return;
+  form.style.display=form.style.display==='none' || !form.style.display?'':'none';
+}
+
+function addAdminTopic(){
+  const nameEl=document.getElementById('new-topic-name');
+  const styleEl=document.getElementById('new-topic-style');
+  if(!nameEl||!styleEl)return;
+  const name=nameEl.value.trim();
+  if(!name){toast('Nom du topic requis','e');return;}
+  const cls=styleEl.value;
+  const tbody=document.getElementById('admin-topics-body');
+  if(!tbody)return;
+  const tr=document.createElement('tr');
+  tr.innerHTML='<td><div style="display:flex;align-items:center;gap:7px"><div class="topic-icon '+cls+'" style="width:24px;height:24px;border-radius:5px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><span style="font-size:13px"></span></div></td><td style="font-size:13px">0</td><td style="font-size:13px">0</td><td><span class="status-chip sc-active">Actif</span></td><td><div class="inline-actions"><button class="btn btn-outline btn-sm" onclick="toast(\'Édition de '+name.replace(/'/g,"\\'")+'\',\'i\')">Éditer</button></div></td>';
+  tr.querySelector('span').textContent=name;
+  tbody.prepend(tr);
+  nameEl.value='';
+  toast('Topic ajouté','s');
 }
 
 function decSig(){
@@ -1691,43 +2289,11 @@ function refuseCandidate(btn,name){
   const b=document.getElementById('adminModBadge');if(b)b.textContent=Math.max(0,parseInt(b.textContent)-1);
 }
 
-function handleAvatar(input){
-  if(!input.files||!input.files[0])return;
-  const file=input.files[0];
-  if(file.size>2*1024*1024){toast('Image trop grande (max 2MB)','e');return;}
-  const reader=new FileReader();
-  reader.onload=function(e){
-    currentAvatarSrc=e.target.result;
-    const preview=document.getElementById('av-preview');
-    if(preview){
-      preview.innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-    }
-    toast('Photo sélectionnée','s');
-  };
-  reader.readAsDataURL(file);
-}
-
 function saveProfile(){
   const uname=document.getElementById('edit-username').value.trim();
   if(!uname){toast('Le pseudonyme ne peut pas être vide','e');return;}
-  // Update username displays
   document.getElementById('prof-username').textContent=uname;
   document.getElementById('sb-uname') && (document.getElementById('sb-uname').textContent=uname);
-  // Update avatars if new image selected
-  if(currentAvatarSrc){
-    const avEls=['prof-av-display','compose-av','comment-av','sb-av','topbar-avatar'];
-    avEls.forEach(id=>{
-      const el=document.getElementById(id);
-      if(!el)return;
-      if(id==='topbar-avatar'){
-        el.innerHTML='<img src="'+currentAvatarSrc+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-      } else if(id==='prof-av-display'){
-        el.innerHTML='<img src="'+currentAvatarSrc+'" style="width:100%;height:100%;object-fit:cover;">';
-      } else {
-        el.innerHTML='<img src="'+currentAvatarSrc+'">';
-      }
-    });
-  }
   closeM('editM');
   toast('Profil mis à jour','s');
 }
@@ -1754,12 +2320,23 @@ document.addEventListener('click',function(){
 });
 
 function initApp(){
-  const hasSeenIntro=localStorage.getItem('whisper_intro_seen')==='1';
-  go(hasSeenIntro?'accueil':'intro');
+  seedDefaultUsers();
+  const sessionUser=getSessionUser();
+  if(sessionUser){
+    currentUser=sessionUser;
+    setAuthUI(true);
+    applyUserUI(sessionUser);
+    const hasSeenIntro=localStorage.getItem('whisper_intro_seen')==='1';
+    go(hasSeenIntro?'accueil':'intro');
+  }else{
+    setAuthUI(false);
+    go('connexion');
+  }
   clearHomeTopicFilter();
 }
 
 initApp();
 updBadge();
+refreshReportCounters();
 applyThemeUI();
 </script>
